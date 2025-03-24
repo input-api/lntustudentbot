@@ -6,10 +6,8 @@ from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 
 class EventActions(Enum):
+    my_events = "my_events"
     add_event = "add_event"
-    edit_event = "edit_event"
-    delete_event = "delete_event"
-
 
 class EventCbData(CallbackData, prefix="actions_events"):
     action: EventActions
@@ -18,11 +16,10 @@ class EventCbData(CallbackData, prefix="actions_events"):
 def actions_events_keyboard() -> InlineKeyboardMarkup:
     builder = InlineKeyboardBuilder()
 
-    builder.button(text="➕", callback_data=EventCbData(action=EventActions.add_event).pack())
-    builder.button(text="✏️", callback_data=EventCbData(action=EventActions.edit_event).pack())
-    builder.button(text="🗑️", callback_data=EventCbData(action=EventActions.delete_event).pack())
+    builder.button(text="Мої події", callback_data=EventCbData(action=EventActions.my_events).pack())
+    builder.button(text="➕ Додати подію", callback_data=EventCbData(action=EventActions.add_event).pack())
     builder.button(text="🔙 Адмін-меню", callback_data="back_main_admin")
-    builder.adjust(3, 1)
+    builder.adjust(1)
 
     return builder.as_markup()
 

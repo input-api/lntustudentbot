@@ -17,13 +17,6 @@ async def show_student_government_menu(callback_query: CallbackQuery):
         reply_markup=gov_keyboard()
     )
 
-@main_menu_router.callback_query(MainCbData.filter(F.action == MainActions.events))
-async def show_events(callback_query: CallbackQuery):
-    await callback_query.message.edit_text(
-        text="Заплановані заходи...",
-        reply_markup=back_to_main()
-    )
-
 @main_menu_router.callback_query(MainCbData.filter(F.action == MainActions.question))
 async def students_questions(callback_query: CallbackQuery):
     await callback_query.message.edit_text(

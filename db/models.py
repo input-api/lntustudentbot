@@ -45,10 +45,22 @@ class Position(Base):
     telegram: Mapped[str] = mapped_column(String(50))
     email: Mapped[str] = mapped_column(String(50))
     quote: Mapped[str] = mapped_column(String(200))
-    #is_admin: Mapped[bool] = mapped_column(Boolean, default=False)
+    is_admin: Mapped[bool] = mapped_column(Boolean, default=False)
     structure_id: Mapped[int] = mapped_column(ForeignKey("structure.id"))
 
     structure = relationship("Structure", backref="positions")
+
+class PositionStatus(Base):
+    __tablename__ = "position_status"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    questions_notifications: Mapped[bool] = mapped_column(Boolean, default=True)
+    hostels_notifications: Mapped[bool] = mapped_column(Boolean, default=False)
+    ideas_notifications: Mapped[bool] = mapped_column(Boolean, default=True)
+    talents_notifications: Mapped[bool] = mapped_column(Boolean, default=True)
+
+    position_id = mapped_column(ForeignKey("position.id"), unique=True)
+
 
 class PositionShowInfo(Base):
     __tablename__ = "position_show_info"
@@ -80,8 +92,10 @@ class ScheduledEvents(Base):
     title: Mapped[str] = mapped_column(String(100), nullable=False)
     description: Mapped[str] = mapped_column(Text, nullable=False)
     date_time_start: Mapped[DateTime] = mapped_column(DateTime, nullable=False)
-    date_time_end: Mapped[DateTime] = mapped_column(DateTime, nullable=False)
+    location: Mapped[str] = mapped_column(String(50), nullable=False)
     organizer: Mapped[str] = mapped_column(String(100), nullable=False)
+    published: Mapped[bool] = mapped_column(Boolean, default=False)
+    created_by = mapped_column(ForeignKey("position.id"))
 
 class EventAlbum(Base):
     __tablename__ = "event_album"
@@ -171,3 +185,6 @@ class WhiteList(Base):
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     superadmin_id: Mapped[int] = mapped_column(BigInteger, nullable=False)
+
+# class Chats(Base):
+#     __tablename__ = "bot_chat"

@@ -4,6 +4,7 @@ from aiogram.fsm.context import FSMContext
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from bot_setup import get_bot
 from db.orm_query import orm_add_structure
 from fsm.superadmin.fsm_add_structure import AddStructure
 from kbds.superadmin.main_kbd import back_main_superadmin
@@ -13,6 +14,7 @@ add_structure_router = Router()
 
 @add_structure_router.callback_query(StructureOptCbData.filter(F.action == StructureOptActions.add_structure))
 async def add_structure(callback_query: CallbackQuery, state: FSMContext):
+    await state.update_data(sm_id=callback_query.message.message_id - 1)
     await state.set_state(AddStructure.full_name)
     await callback_query.message.edit_text(
         text="Введіть повну назву структури:",
@@ -35,7 +37,13 @@ async def handle_full_name_invalid(message: Message):
 @add_structure_router.message(AddStructure.short_name, F.text)
 async def handle_short_name(message: Message, state: FSMContext, session: AsyncSession):
     short_name = message.text
-    data = await state.update_data(short_name=short_name.casefold())
+    data = await state.update_data(short_name=short_name.casefold(), em_id = message.message_id+1)
+
+    chat_id = message.from_user.id
+    bot = get_bot()
+    on_delete = list(range(data["sm_id"],data["em_id"]))
+    await bot.delete_messages(chat_id=chat_id,message_ids=on_delete)
+
     await state.clear()
     await orm_add_structure(session, data)
     await message.answer(

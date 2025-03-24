@@ -1,5 +1,7 @@
 from aiogram import Router, F, types
-from aiogram.types import CallbackQuery
+from aiogram.types import CallbackQuery, Message
+from aiogram.fsm.context import FSMContext
+from aiogram.filters import StateFilter
 
 from filters.main_filters import IsSuperAdmin
 from handlers.superadmin_handlers.main_kbd_handler import superadmin_main_router
@@ -32,3 +34,13 @@ async def back_main_admin(callback_query: types.CallbackQuery):
         text="Ви суперадмін:",
         reply_markup=super_admin_keyboard(),
     )
+
+
+@super_admin_router.message(StateFilter("*"), F.text.in_({"cancel", "відміна", "exit", "вийти"}))
+async def cancel_handler(message: types.Message, state: FSMContext) -> None:
+    current_state = await state.get_state()
+    if current_state is None:
+        return
+
+    await state.clear()
+    await message.answer("Дії відмінено!", reply_markup=back_main_superadmin())

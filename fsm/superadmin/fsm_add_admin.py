@@ -9,6 +9,7 @@ class AddAdmin(StatesGroup):
     instagram = State()
     telegram = State()
     email = State()
+    is_admin = State()
     quote = State()
     structure = State()
     photo = State()

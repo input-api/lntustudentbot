@@ -41,7 +41,7 @@ async def on_startup(bot):
     await create_db()
 
 async def on_shutdown(bot):
-    #await drop_db()
+    # await drop_db()
     ...
 
 @dp.message(Command("updsudo"))
@@ -70,10 +70,6 @@ async def start(message: Message, session: AsyncSession):
     await message.answer("Привіііт."
                          f"\nЯ бот-помічник студента ЛНТУ."
                          f"\nОсь що я можу запропонувати:", reply_markup=main_keyboard())
-
-# @dp.message()
-# async def f(message: Message):
-#     await message.answer(f"{message.forward_origin.sender_user.}")
 
 async def check_user_in_db(message, session):
     data = {

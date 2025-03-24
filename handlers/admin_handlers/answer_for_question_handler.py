@@ -19,6 +19,7 @@ QUESTIONS_PER_PAGE = 5
 
 @admin_answer_router.callback_query(AdminCbData.filter(F.action == AdminActions.questions))
 async def show_user_questions(callback_query: CallbackQuery, session: AsyncSession, state: FSMContext, page: int = 0,):
+    await state.update_data(sm_id = callback_query.message.message_id - 1)
     await state.set_state(AddAnswer.select_question)
     tg_id = callback_query.from_user.id
     structure = await orm_get_structure_by_tg_id_position(session=session, tg_id=tg_id)
@@ -77,16 +78,20 @@ async def set_answer(message: Message, state: FSMContext):
     text = f"{data["q_content"]}\n\nВаша відповідь:\n{data["answer_text"]}"
     await message.answer(
         text=f"{text}\nПерегляньте написану відповідь та підтвердіть.",
-        reply_markup=approve()
+        reply_markup=approve("add_answer")
     )
 
-@admin_answer_router.callback_query(AddAnswer.approve, F.data == "yes")
+@admin_answer_router.callback_query(AddAnswer.approve, F.data == "add_answer_yes")
 async def save_answer(callback_query: CallbackQuery, state: FSMContext, session: AsyncSession):
-    data = await state.update_data(who_answered_id=callback_query.from_user.id)
-    await state.clear()
+    data = await state.update_data(who_answered_id=callback_query.from_user.id, em_id = callback_query.message.message_id)
     bot = get_bot()
     await orm_add_answer(session, data)
     user_id, content = await orm_get_from_whom_id(session, data["question_id"])
+
+    on_delete = list(range(data["sm_id"], data["em_id"]))
+    await bot.delete_messages(chat_id=user_id, message_ids=on_delete)
+
+    await state.clear()
     await bot.send_message(
         chat_id=user_id,
         text=f"<blockquote>Ви питали:\n{content}</blockquote>\nВідповідь:\n{data["answer_text"]}"
@@ -95,8 +100,13 @@ async def save_answer(callback_query: CallbackQuery, state: FSMContext, session:
         "Дані збережено"
     )
 
-@admin_answer_router.callback_query(AddAnswer.approve, F.data == "no")
+@admin_answer_router.callback_query(AddAnswer.approve, F.data == "add_answer_no")
 async def cancel_answer(callback_query: CallbackQuery, state: FSMContext):
+    data = await state.update_data(em_id = callback_query.message.message_id)
+    chat_id = callback_query.from_user.id
+    bot = get_bot()
+    on_delete = list(range(data["sm_id"],data["em_id"]))
+    await bot.delete_messages(chat_id=chat_id,message_ids=on_delete)
     await state.clear()
     await callback_query.message.edit_text(
         text="Ви відмінили збереження відповіді.",

@@ -1,11 +1,11 @@
 from aiogram.types import InlineKeyboardMarkup
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
-def approve() -> InlineKeyboardMarkup:
+def approve(action: str) -> InlineKeyboardMarkup:
     builder = InlineKeyboardBuilder()
 
-    builder.button(text="✅ Так", callback_data=f"yes")
-    builder.button(text="❌ Ні", callback_data=f"no")
+    builder.button(text="✅ Так", callback_data=f"{action}_yes")
+    builder.button(text="❌ Ні", callback_data=f"{action}_no")
 
     builder.adjust(2)
 

@@ -12,7 +12,7 @@ async def settle_in_hostel(callback_query: CallbackQuery):
     if state == "hostels":
         await callback_query.message.edit_text(
             text="Оберіть гуртожиток:",
-            reply_markup=hostels_keyboard(option=option)
+            reply_markup=hostels_keyboard(previous_action=None, option=option)
         )
 
 @hostel_option_router.callback_query(HostelsOptionCbData.filter(F.action == HostelsOptionActions.problems))
@@ -21,7 +21,7 @@ async def settle_in_hostel(callback_query: CallbackQuery):
     if state == "hostels":
         await callback_query.message.edit_text(
             text="Оберіть гуртожиток:",
-            reply_markup=hostels_keyboard(option=option)
+            reply_markup=hostels_keyboard(previous_action=None, option=option)
         )
 
 @hostel_option_router.callback_query(HostelsOptionCbData.filter(F.action == HostelsOptionActions.complaint))
@@ -30,5 +30,5 @@ async def settle_in_hostel(callback_query: CallbackQuery):
     if state == "hostels":
         await callback_query.message.edit_text(
             text="Оберіть гуртожиток:",
-            reply_markup=hostels_keyboard(option=option)
+            reply_markup=hostels_keyboard(previous_action=None, option=option)
         )

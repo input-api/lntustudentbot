@@ -1,5 +1,7 @@
 from aiogram import F, Router, types
 from aiogram.filters import Command
+from aiogram.fsm.context import FSMContext
+from aiogram.filters import StateFilter
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -18,6 +20,7 @@ from kbds.superadmin.main_kbd import super_admin_keyboard
 from kbds.user.main_kbd import main_keyboard, back_to_main
 from kbds.user.hostel_opt_kbd import hostel_option_keyboard
 from kbds.user.utils_kbds import yes_or_no_kbd
+from views.user.views_event import view_event
 
 from views.user.views_government import view_gov_router
 from views.user.views_government_faculty import view_gov_faculty_router
@@ -33,6 +36,7 @@ user_router.include_routers(
     view_gov_router,
     view_gov_faculty_router,
     view_gov_hostel_router,
+    view_event,
     user_question_router,
 )
 
@@ -87,3 +91,12 @@ async def super_admin(message: types.Message):
         text="Меню суперадміна:",
         reply_markup=super_admin_keyboard(),
     )
+
+@user_router.message(StateFilter("*"), F.text.in_({"cancel", "відміна", "exit", "вийти"}))
+async def cancel_handler(message: types.Message, state: FSMContext) -> None:
+    current_state = await state.get_state()
+    if current_state is None:
+        return
+
+    await state.clear()
+    await message.answer("Дії відмінено!", reply_markup=back_to_main())
