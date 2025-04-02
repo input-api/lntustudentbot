@@ -14,7 +14,7 @@ main_menu_router.include_router(propose_idea_router)
 async def show_student_government_menu(callback_query: CallbackQuery):
     await callback_query.message.edit_text(
         text="Що з студентського свмоврядування вас цікавить?",
-        reply_markup=gov_keyboard()
+        reply_markup=gov_keyboard(param="student_gov")
     )
 
 @main_menu_router.callback_query(MainCbData.filter(F.action == MainActions.question))
@@ -32,10 +32,10 @@ async def students_propose_idea(callback_query: CallbackQuery):
     )
 
 @main_menu_router.callback_query(MainCbData.filter(F.action == MainActions.join_us))
-async def join_student(callback_query: CallbackQuery):
+async def join_us(callback_query: CallbackQuery):
     await callback_query.message.edit_text(
         text="Куди ви хочете доєднатись?",
-        reply_markup=gov_keyboard(remove=True)
+        reply_markup=gov_keyboard(remove=True, param="join_us")
     )
 
 @main_menu_router.callback_query(MainCbData.filter(F.action == MainActions.hostels))
@@ -53,15 +53,8 @@ async def students_talents(callback_query: CallbackQuery):
     )
 
 @main_menu_router.callback_query(MainCbData.filter(F.action == MainActions.volunteer_hub))
-async def students_talents(callback_query: CallbackQuery):
+async def volunteer_hub(callback_query: CallbackQuery):
     await callback_query.message.edit_text(
-        text="text=Про волонтер-хаб, button=доєднатись",
-        reply_markup=back_to_main()
-    )
-
-@main_menu_router.callback_query(MainCbData.filter(F.action == MainActions.volunteer_hub))
-async def students_talents(callback_query: CallbackQuery):
-    await callback_query.message.edit_text(
-        text="text=Про волонтер-хаб, button=доєднатись",
+        text="Про волонтер-хаб, button=доєднатись",
         reply_markup=back_to_main()
     )

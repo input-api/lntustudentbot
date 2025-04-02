@@ -17,7 +17,7 @@ from fsm.admin.fsm_publish_event import PublishEvent
 from fsm.admin.fsm_unpublish_event import UnpublishEvent
 from handlers.admin_handlers.utils import approve
 from kbds.admin.event_action_kbd import EventActCbData, EventActActions
-from kbds.admin.main_kbd import admin_keyboard, back_to_main_admin
+from kbds.admin.main_kbd import back_to_main_admin
 
 event_act_router = Router()
 
@@ -107,7 +107,7 @@ async def set_new_event_photo(message: Message, session: AsyncSession, state: FS
     )
 
 @event_act_router.message(EditEvent.set_photo)
-async def set_new_event_photo_invalid(message: Message, state: FSMContext):
+async def set_new_event_photo_invalid(message: Message):
     await message.answer(
         text="Надішліть фото афіші.",
     )

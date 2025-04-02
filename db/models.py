@@ -42,7 +42,7 @@ class Position(Base):
     surname: Mapped[str] = mapped_column(String(30), nullable=False)
     phone: Mapped[str] = mapped_column(String(13), nullable=False)
     instagram: Mapped[str] = mapped_column(String(50))
-    telegram: Mapped[str] = mapped_column(String(50))
+    telegram: Mapped[str] = mapped_column(String(50), nullable=True)
     email: Mapped[str] = mapped_column(String(50))
     quote: Mapped[str] = mapped_column(String(200))
     is_admin: Mapped[bool] = mapped_column(Boolean, default=False)
@@ -186,5 +186,10 @@ class WhiteList(Base):
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     superadmin_id: Mapped[int] = mapped_column(BigInteger, nullable=False)
 
-# class Chats(Base):
-#     __tablename__ = "bot_chat"
+class Chats(Base):
+    __tablename__ = "bot_chats"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    chat_id: Mapped[int] = mapped_column(BigInteger, nullable=False)
+
+

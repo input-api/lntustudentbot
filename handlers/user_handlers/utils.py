@@ -9,8 +9,8 @@ async def dictionary_faculty_key(key):
         "fabd": "фабд",
         "general_gov": "загал",
         "profcom": "профком",
-        "h1": "гурт 1",
-        "h2": "гурт 2",
-        "h3": "гурт 3",
+        "h1": "гурт1",
+        "h2": "гурт2",
+        "h3": "гурт3",
     }
     return data.get(key, "Невідомий факультет")

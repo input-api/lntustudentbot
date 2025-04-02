@@ -4,6 +4,7 @@ from aiogram.types import CallbackQuery, InputMediaPhoto
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from bot_setup import get_bot
 from db.orm_query import orm_get_positions, orm_get_image_by_position_id
 from handlers.user_handlers.utils import dictionary_faculty_key
 from kbds.user.faculty_kbd import FacultyCbData
@@ -75,6 +76,10 @@ async def paginate_government(callback_query: CallbackQuery, session: AsyncSessi
 
 @view_gov_faculty_router.callback_query(F.data == "back_to_main_from_faculty_gov")
 async def back_to_main_from_gen_gov(callback_query: CallbackQuery):
+    chat_id = callback_query.from_user.id
+    bot = get_bot()
+    on_delete = callback_query.message.message_id
+    await bot.delete_message(chat_id=chat_id, message_id=on_delete)
     await callback_query.message.answer(
         text="Головне меню:",
         reply_markup=main_keyboard(),

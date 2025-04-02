@@ -179,17 +179,40 @@ async def orm_add_position(session: AsyncSession(), data: dict):
     session.add(position_status)
     await session.commit()
 
-async def orm_get_positions(session: AsyncSession(), structure: str):
+async def orm_get_positions(session: AsyncSession, structure: str):
     query = select(Position).join(Structure, Position.structure_id == Structure.id).where(Structure.short_name == structure)
     result = await session.execute(query)
     return result.scalars().all()
 
+async def orm_get_all_positions(session: AsyncSession):
+    query = select(Position)
+    result = await session.execute(query)
+    return result.scalars().all()
+
+async def orm_get_positions_id_list(session: AsyncSession):
+    query = select(Position.id)
+    result = await session.execute(query)
+    return result.scalars().all()
+
+async def orm_update_position(session: AsyncSession, position_id, **kwargs):
+    query = update(Position).where(Position.id == position_id).values(
+        **kwargs
+    )
+    await session.execute(query)
+    await session.commit()
 
 #/////////////////////// ORM QUERIES FOR MODEL GovernmentAlbum ///////////////////////#
-async def orm_get_image_by_position_id(session: AsyncSession(), position: int):
+async def orm_get_image_by_position_id(session: AsyncSession, position: int):
     query = select(GovernmentAlbum).join(Position, Position.id == GovernmentAlbum.position_id).where(GovernmentAlbum.position_id == position)
     result = await session.execute(query)
     return result.scalars().first()
+
+async def orm_update_position_photo(session: AsyncSession, position_id: int, image):
+    query = update(GovernmentAlbum).where(GovernmentAlbum.position_id == position_id).values(
+        image=image
+    )
+    await session.execute(query)
+    await session.commit()
 
 #/////////////////////// ORM QUERIES FOR MODEL ProposeIdea ///////////////////////#
 async def orm_add_propose_idea(session: AsyncSession(), data: dict):

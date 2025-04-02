@@ -1,5 +1,3 @@
-from pyexpat.errors import messages
-
 from aiogram import F, Router
 from aiogram.types import CallbackQuery
 
@@ -18,7 +16,7 @@ async def show_profcom_menu(callback_query: CallbackQuery):
         reply_markup=back_to_main()
     )
 
-@government_router.callback_query(GovCbData.filter(F.action == GovActions.faculties_gov))
+@government_router.callback_query(GovCbData.filter(F.action == GovActions.faculties_gov), GovCbData.filter(F.prev == "student_gov"))
 async def show_faculties_government_menu(callback_query: CallbackQuery):
     action = callback_query.data.split(":")[1]
     await callback_query.message.edit_text(

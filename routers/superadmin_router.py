@@ -28,14 +28,6 @@ async def structure_options_actions(callback_query: CallbackQuery):
         reply_markup=structure_opt_actions_keyboard()
     )
 
-@super_admin_router.callback_query(F.data == "back_main_superadmin")
-async def back_main_admin(callback_query: types.CallbackQuery):
-    await callback_query.message.edit_text(
-        text="Ви суперадмін:",
-        reply_markup=super_admin_keyboard(),
-    )
-
-
 @super_admin_router.message(StateFilter("*"), F.text.in_({"cancel", "відміна", "exit", "вийти"}))
 async def cancel_handler(message: types.Message, state: FSMContext) -> None:
     current_state = await state.get_state()
