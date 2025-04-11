@@ -7,7 +7,7 @@ from aiogram.fsm.context import FSMContext
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from bot_setup import get_bot
+from bot import bot
 from db.orm_query import orm_get_admins_events_id_list, orm_get_date_time_start_event, orm_update_event, \
     orm_update_event_poster, orm_delete_event_by_id, orm_get_all_user_with_event_notification, \
     orm_get_scheduled_event_by_id, orm_get_poster_by_event_id
@@ -95,7 +95,6 @@ async def set_new_event_photo(message: Message, session: AsyncSession, state: FS
 
     user_id = message.from_user.id
     em_id = message.message_id+1
-    bot = get_bot()
     on_delete = list(range(data["sm_id"], em_id))
     await bot.delete_messages(chat_id=user_id, message_ids=on_delete)
 
@@ -169,7 +168,6 @@ async def get_update_event(message: Message, session: AsyncSession, state: FSMCo
 
     user_id = message.from_user.id
     em_id = message.message_id+1
-    bot = get_bot()
     on_delete = list(range(data["sm_id"], em_id))
     await bot.delete_messages(chat_id=user_id, message_ids=on_delete)
 
@@ -215,7 +213,6 @@ async def delete_event(callback_query: CallbackQuery, state: FSMContext, session
 
     event_id = int(data["event_id"])
 
-    bot = get_bot()
     await orm_delete_event_by_id(session, event_id)
 
     on_delete = list(range(data["sm_id"], data["em_id"]))
@@ -231,7 +228,6 @@ async def delete_event(callback_query: CallbackQuery, state: FSMContext, session
 async def cancel_delete_event(callback_query: CallbackQuery, state: FSMContext):
     data = await state.update_data(em_id = callback_query.message.message_id+1)
     chat_id = callback_query.from_user.id
-    bot = get_bot()
     on_delete = list(range(data["sm_id"],data["em_id"]))
     await bot.delete_messages(chat_id=chat_id,message_ids=on_delete)
     await state.clear()
@@ -277,7 +273,6 @@ async def unpublish_event(callback_query: CallbackQuery, state: FSMContext, sess
 
     event_id = int(data["event_id"])
 
-    bot = get_bot()
     await orm_update_event(session, event_id, published = False)
 
     on_delete = list(range(data["sm_id"], data["em_id"]))
@@ -293,7 +288,6 @@ async def unpublish_event(callback_query: CallbackQuery, state: FSMContext, sess
 async def cancel_unpublish_event(callback_query: CallbackQuery, state: FSMContext):
     data = await state.update_data(em_id = callback_query.message.message_id+1)
     chat_id = callback_query.from_user.id
-    bot = get_bot()
     on_delete = list(range(data["sm_id"],data["em_id"]))
     await bot.delete_messages(chat_id=chat_id,message_ids=on_delete)
     await state.clear()
@@ -351,7 +345,6 @@ async def publish_event(callback_query: CallbackQuery, state: FSMContext, sessio
 
     event_id = int(data["event_id"])
 
-    bot = get_bot()
     await orm_update_event(session, event_id, published=True)
     event = await orm_get_scheduled_event_by_id(session, event_id)
     date_part = event.date_time_start.strftime("%d.%m.%Y")
@@ -387,7 +380,6 @@ async def publish_event(callback_query: CallbackQuery, state: FSMContext, sessio
 async def cancel_publish_event(callback_query: CallbackQuery, state: FSMContext):
     data = await state.update_data(em_id = callback_query.message.message_id+1)
     chat_id = callback_query.from_user.id
-    bot = get_bot()
     on_delete = list(range(data["sm_id"],data["em_id"]))
     await bot.delete_messages(chat_id=chat_id,message_ids=on_delete)
     await state.clear()

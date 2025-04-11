@@ -9,7 +9,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 import logging
 
-from bot_setup import get_bot
+from bot import bot
 from db.orm_query import orm_get_user_data, orm_update_user_data, orm_add_user_data, orm_get_users_data, \
     orm_add_to_white_list
 from filters.main_filters import IsAdmin
@@ -25,10 +25,6 @@ from db.engine import create_db, session_maker, drop_db
 from routers.user_router import user_router
 from common.bot_cmds_list import user_cmd, admin_cmd
 from middlewares.db import DataBaseMiddleware
-
-ALLOWED_UPDATES = ['message', 'callback_query']
-
-bot = get_bot()
 
 dp = Dispatcher()
 

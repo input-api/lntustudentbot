@@ -7,7 +7,7 @@ from aiogram.fsm.context import FSMContext
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from bot_setup import get_bot
+from bot import bot
 from db.orm_query import orm_get_structure_by_tg_id_position, orm_get_questions, orm_add_answer, orm_get_from_whom_id
 from fsm.admin.fsm_add_answer import AddAnswer
 from handlers.admin_handlers.utils import approve
@@ -84,7 +84,6 @@ async def set_answer(message: Message, state: FSMContext):
 @admin_answer_router.callback_query(AddAnswer.approve, F.data == "add_answer_yes")
 async def save_answer(callback_query: CallbackQuery, state: FSMContext, session: AsyncSession):
     data = await state.update_data(who_answered_id=callback_query.from_user.id, em_id = callback_query.message.message_id)
-    bot = get_bot()
     await orm_add_answer(session, data)
     user_id, content = await orm_get_from_whom_id(session, data["question_id"])
 
@@ -104,7 +103,6 @@ async def save_answer(callback_query: CallbackQuery, state: FSMContext, session:
 async def cancel_answer(callback_query: CallbackQuery, state: FSMContext):
     data = await state.update_data(em_id = callback_query.message.message_id)
     chat_id = callback_query.from_user.id
-    bot = get_bot()
     on_delete = list(range(data["sm_id"],data["em_id"]))
     await bot.delete_messages(chat_id=chat_id,message_ids=on_delete)
     await state.clear()

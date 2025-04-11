@@ -1,7 +1,7 @@
 from aiogram import F, Router
 from aiogram.types import CallbackQuery
 
-from handlers.user_handlers.propose_idea_fsm_handler import propose_idea_router
+from handlers.user_handlers.fsm_handler.propose_idea_fsm_handler import propose_idea_router
 from kbds.user.faculty_kbd import faculty_keyboard
 from kbds.user.hostel_opt_kbd import hostel_option_keyboard
 from kbds.user.main_kbd import MainActions, MainCbData, back_to_main

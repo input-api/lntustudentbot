@@ -14,7 +14,7 @@ from handlers.user_handlers.hostel_opt_kbd_handler import hostel_option_router
 from handlers.user_handlers.hostels_kbds_handler import hostels_router
 from handlers.user_handlers.join_us_handler import join_us_router
 from handlers.user_handlers.main_kbd_handler import main_menu_router
-from handlers.user_handlers.add_question_fsm_handler import user_question_router
+from handlers.user_handlers.fsm_handler.add_question_fsm_handler import user_question_router
 
 from kbds.admin.main_kbd import admin_keyboard
 from kbds.superadmin.main_kbd import super_admin_keyboard

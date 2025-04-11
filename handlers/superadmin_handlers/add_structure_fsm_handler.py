@@ -4,7 +4,7 @@ from aiogram.fsm.context import FSMContext
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from bot_setup import get_bot
+from bot import bot
 from db.orm_query import orm_add_structure
 from fsm.superadmin.fsm_add_structure import AddStructure
 from kbds.superadmin.main_kbd import back_main_superadmin
@@ -40,7 +40,6 @@ async def handle_short_name(message: Message, state: FSMContext, session: AsyncS
     data = await state.update_data(short_name=short_name.casefold(), em_id = message.message_id+1)
 
     chat_id = message.from_user.id
-    bot = get_bot()
     on_delete = list(range(data["sm_id"],data["em_id"]))
     await bot.delete_messages(chat_id=chat_id,message_ids=on_delete)
 

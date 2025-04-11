@@ -6,7 +6,7 @@ from aiogram.fsm.context import FSMContext
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from bot_setup import get_bot
+from bot import bot
 from db.orm_query import orm_add_scheduled_event
 from handlers.admin_handlers.utils import approve
 from kbds.admin.main_kbd import back_to_main_admin
@@ -145,7 +145,6 @@ async def save_event(callback_query: CallbackQuery, state: FSMContext, session: 
     datetime_str = f"{data['date_start']} {data['time_start']}"
     data["date_time"] = datetime.strptime(datetime_str, "%d.%m.%Y %H:%M")
 
-    bot = get_bot()
     await orm_add_scheduled_event(session, data)
 
     on_delete = list(range(data["sm_id"], data["em_id"]))
@@ -163,7 +162,6 @@ async def save_event(callback_query: CallbackQuery, state: FSMContext, session: 
 async def cancel_event(callback_query: CallbackQuery, state: FSMContext):
     data = await state.update_data(em_id = callback_query.message.message_id+2)
     chat_id = callback_query.from_user.id
-    bot = get_bot()
     on_delete = list(range(data["sm_id"],data["em_id"]))
     await bot.delete_messages(chat_id=chat_id,message_ids=on_delete)
     await state.clear()

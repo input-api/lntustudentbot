@@ -3,7 +3,6 @@ from aiogram.types import CallbackQuery
 
 from kbds.user.faculty_kbd import faculty_keyboard
 from kbds.user.gov_kbd import GovCbData, GovActions
-from kbds.user.main_kbd import back_to_main
 
 join_us_router = Router()
 

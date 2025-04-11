@@ -8,7 +8,7 @@ from aiogram.fsm.context import FSMContext
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from bot_setup import get_bot
+from bot import bot
 from db.orm_query import orm_get_published_events, orm_get_poster_by_event_id
 from kbds.user.main_kbd import MainCbData, MainActions, main_keyboard
 
@@ -28,6 +28,12 @@ async def show_events(callback_query: CallbackQuery, session: AsyncSession, stat
     builder = InlineKeyboardBuilder()
     builder.button(text="🏡 Головне меню", callback_data="back_to_main_from_events")
     to_main = builder.as_markup()
+
+    if not events:
+        await callback_query.message.answer(
+            text="Поки подій немає",
+            reply_markup=to_main,
+        )
 
     for index, event in enumerate(events):
         date_part = event.date_time_start.strftime("%d %B")
@@ -58,7 +64,6 @@ async def show_events(callback_query: CallbackQuery, session: AsyncSession, stat
 
 @view_event.callback_query(F.data == "back_to_main_from_events")
 async def back_to_main_from_events(callback_query: CallbackQuery, state: FSMContext):
-    bot = get_bot()
     data = await state.get_data()
     messages_to_delete = data.get("messages_to_delete", [])
     for msg_id in messages_to_delete:

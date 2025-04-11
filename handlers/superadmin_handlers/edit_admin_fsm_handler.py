@@ -6,7 +6,7 @@ from aiogram.fsm.context import FSMContext
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from bot_setup import get_bot
+from bot import bot
 from db.orm_query import orm_get_all_positions, orm_get_positions_id_list, orm_update_position_photo, \
     orm_update_position
 from fsm.superadmin.fsm_edit_admin import EditAdmin
@@ -104,7 +104,6 @@ async def set_new_admin_photo(message: Message, session: AsyncSession, state: FS
 
     user_id = message.from_user.id
     em_id = message.message_id+1
-    bot = get_bot()
     on_delete = list(range(data["sm_id"], em_id))
     await bot.delete_messages(chat_id=user_id, message_ids=on_delete)
 
@@ -197,7 +196,6 @@ async def update_admin(message: Message, session: AsyncSession, state: FSMContex
 
     user_id = message.from_user.id
     em_id = message.message_id+1
-    bot = get_bot()
     on_delete = list(range(data["sm_id"], em_id))
     await bot.delete_messages(chat_id=user_id, message_ids=on_delete)
 

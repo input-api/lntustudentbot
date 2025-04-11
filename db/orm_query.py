@@ -4,7 +4,7 @@ from datetime import datetime
 import pytz
 
 from db.models import UserData, UserStatus, WhiteList, Structure, Position, GovernmentAlbum, ProposeIdea, Question, \
-    Answer, PositionStatus, ScheduledEvents, EventAlbum
+    Answer, PositionStatus, ScheduledEvents, EventAlbum, LNTUCapability
 
 
 #/////////////////////// ORM QUERIES FOR MODEL WhiteList ///////////////////////#
@@ -43,6 +43,12 @@ async def orm_get_users_data(session: AsyncSession()):
     query = select(UserData)
     result = await session.execute(query)
     return result.scalars().all()
+
+async def orm_get_users_data_count(session: AsyncSession()):
+    query = select(func.count(UserData.tg_id))
+    result = await session.execute(query)
+    count = result.scalar()
+    return count
 
 async def orm_get_user_data(session: AsyncSession(), user_id: int):
     query = select(UserData).where(UserData.tg_id == user_id)
@@ -365,4 +371,13 @@ async def orm_update_event_poster(session: AsyncSession, event_id: int, image):
         image=image
     )
     await session.execute(query)
+    await session.commit()
+
+#/////////////////////// ORM QUERIES FOR MODEL LNTUCapability ///////////////////////#
+async def orm_add_lntu_telent(session: AsyncSession, capability, from_whom_id):
+    capability_obj = LNTUCapability(
+        capability=capability,
+        from_whom_id=from_whom_id
+    )
+    session.add(capability_obj)
     await session.commit()
