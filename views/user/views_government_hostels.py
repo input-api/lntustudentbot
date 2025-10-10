@@ -46,7 +46,7 @@ async def send_hostels_government_page(callback_query: CallbackQuery, session: A
         builder.adjust(2, 1)
     else:
         builder.adjust(1)
-
+        
     caption_text = (
         f"<b>{data.position_title}</b>\n"
         f"👤 {data.name} {data.surname}\n"

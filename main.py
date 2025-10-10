@@ -5,6 +5,9 @@ from aiogram import Dispatcher
 from aiogram.types import BotCommandScopeAllPrivateChats, Message
 from aiogram.filters import Command
 
+from aiohttp import web
+from aiogram.webhook.aiohttp_server import SimpleRequestHandler, setup_application
+
 from sqlalchemy.ext.asyncio import AsyncSession
 
 import logging
@@ -25,6 +28,7 @@ from db.engine import create_db, session_maker, drop_db
 from routers.user_router import user_router
 from common.bot_cmds_list import user_cmd, admin_cmd
 from middlewares.db import DataBaseMiddleware
+from data.config import SUDO, WEBHOOK_ADDRESS, WEBHOOK_LISTENING_HOST, WEBHOOK_LISTENING_PORT, WEBHOOK_PATH
 
 dp = Dispatcher()
 
@@ -35,14 +39,17 @@ dp.include_router(super_admin_router)
 
 async def on_startup(bot):
     await create_db()
+    await bot.set_webhook(WEBHOOK_ADDRESS + WEBHOOK_PATH)
 
 async def on_shutdown(bot):
+    await bot.delete_webhook()
+    await bot.session.close() 
     # await drop_db()
-    ...
+
 
 @dp.message(Command("updsudo"))
 async def process(message: Message, session: AsyncSession):
-    sudo_id = int(os.getenv('SUDO'))
+    sudo_id = SUDO
     if sudo_id:
         await orm_add_to_white_list(session, id=sudo_id)
         await message.answer("Суперадміністратора додано")
@@ -87,7 +94,22 @@ async def main():
 
     dp.update.middleware(DataBaseMiddleware(session_pool=session_maker))
 
-    await dp.start_polling(bot)
+    app = web.Application()
+    SimpleRequestHandler(dispatcher=dp, bot=bot).register(app, path=WEBHOOK_PATH)
+    setup_application(app, dp, bot=bot)
+
+    runner = web.AppRunner(app)
+    await runner.setup()
+    site = web.TCPSite(runner, host=WEBHOOK_LISTENING_HOST, port=WEBHOOK_LISTENING_PORT)
+    await site.start()
+
+    print("Bot is running via webhook...")
+
+    try:
+        while True:
+            await asyncio.sleep(3600)
+    except asyncio.CancelledError:
+        print("🛑 Server stopped by user (Ctrl+C)")
 
 if __name__ == "__main__":
     asyncio.run(main())

@@ -37,9 +37,9 @@ async def join_student(callback_query: CallbackQuery):
         reply_markup=back_to_main_admin()
     )
 
-@main_admin_router.callback_query(AdminCbData.filter(F.action == AdminActions.hostels_actions))
-async def show_hostels_options(callback_query: CallbackQuery):
-    await callback_query.message.edit_text(
-        text="Оберіть що цікавить:",
-        reply_markup=hostels_actions_keyboard()
-    )
+# @main_admin_router.callback_query(AdminCbData.filter(F.action == AdminActions.hostels_actions))
+# async def show_hostels_options(callback_query: CallbackQuery):
+#     await callback_query.message.edit_text(
+#         text="Оберіть що цікавить:",
+#         reply_markup=hostels_actions_keyboard()
+#     )

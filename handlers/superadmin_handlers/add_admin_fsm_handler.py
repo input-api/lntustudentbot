@@ -36,7 +36,7 @@ async def handle_position_title_invalid(message: Message):
 
 @add_admin_router.message(AddAdmin.tg_id, F.forward_from | F.forward_from_chat)
 async def handle_tg_id(message: Message, state: FSMContext):
-    await state.update_data(tg_id=message.forward_origin.sender_user.id, telegram=message.forward_origin.sender_user.username)
+    await state.update_data(tg_id=message.forward_origin.sender_user.id, telegram="@" + message.forward_origin.sender_user.username)
     await state.set_state(AddAdmin.name)
     await message.answer("Ім'я адміна:")
 

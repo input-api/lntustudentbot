@@ -24,8 +24,8 @@ def admin_keyboard(hostels_admin) -> InlineKeyboardMarkup:
     builder.button(text="❓ Питання від студентів", callback_data=AdminCbData(action=AdminActions.questions).pack())
     builder.button(text="💡 Ідеї студентів", callback_data=AdminCbData(action=AdminActions.idea_from_stud).pack())
     builder.button(text="🌟 Таланти студентів", callback_data=AdminCbData(action=AdminActions.show_talents).pack())
-    if hostels_admin:
-        builder.button(text="🏠 Гуртожитки", callback_data=AdminCbData(action=AdminActions.hostels_actions).pack())
+    # if hostels_admin:
+    #     builder.button(text="🏠 Гуртожитки", callback_data=AdminCbData(action=AdminActions.hostels_actions).pack())
 
     builder.adjust(1)
 

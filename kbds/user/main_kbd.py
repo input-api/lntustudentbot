@@ -12,7 +12,7 @@ class MainActions(Enum):
     join_us = "join_us"
     hostels = "hostels"
     talents = "talents"
-    volunteer_hub = "volunteer_hub"
+    # volunteer_hub = "volunteer_hub"
     login_as_admin = "login_as_admin"
 
 class MainCbData(CallbackData, prefix="main"):
@@ -26,9 +26,9 @@ def main_keyboard() -> InlineKeyboardMarkup:
     builder.button(text="📞 Зв'язок із студрадою", callback_data=MainCbData(action=MainActions.question).pack())
     builder.button(text="💡 Запропонувати ідею", callback_data=MainCbData(action=MainActions.propose_idea).pack())
     builder.button(text="🤝 Хочу вступити до студради", callback_data=MainCbData(action=MainActions.join_us).pack())
-    builder.button(text="🏠 Гуртожитки ЛНТУ", callback_data=MainCbData(action=MainActions.hostels).pack())
+    # builder.button(text="🏠 Гуртожитки ЛНТУ", callback_data=MainCbData(action=MainActions.hostels).pack())
     builder.button(text="🌟 ЛНТУ має таланти", callback_data=MainCbData(action=MainActions.talents).pack())
-    builder.button(text="🤗 Волонтер-хаб", callback_data=MainCbData(action=MainActions.volunteer_hub).pack())
+    # builder.button(text="🤗 Волонтер-хаб", callback_data=MainCbData(action=MainActions.volunteer_hub).pack())
 
     builder.adjust(1)
 

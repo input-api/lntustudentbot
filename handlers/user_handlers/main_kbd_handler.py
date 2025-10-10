@@ -38,12 +38,12 @@ async def join_us(callback_query: CallbackQuery):
         reply_markup=gov_keyboard(remove=True, param="join_us")
     )
 
-@main_menu_router.callback_query(MainCbData.filter(F.action == MainActions.hostels))
-async def show_hostels_options(callback_query: CallbackQuery):
-    await callback_query.message.edit_text(
-        text="Що про гуртожитки ви хочете дізнатись?",
-        reply_markup=hostel_option_keyboard()
-    )
+# @main_menu_router.callback_query(MainCbData.filter(F.action == MainActions.hostels))
+# async def show_hostels_options(callback_query: CallbackQuery):
+#     await callback_query.message.edit_text(
+#         text="Що про гуртожитки ви хочете дізнатись?",
+#         reply_markup=hostel_option_keyboard()
+#     )
 
 @main_menu_router.callback_query(MainCbData.filter(F.action == MainActions.talents))
 async def students_talents(callback_query: CallbackQuery):
@@ -52,9 +52,9 @@ async def students_talents(callback_query: CallbackQuery):
         reply_markup=back_to_main()
     )
 
-@main_menu_router.callback_query(MainCbData.filter(F.action == MainActions.volunteer_hub))
-async def volunteer_hub(callback_query: CallbackQuery):
-    await callback_query.message.edit_text(
-        text="Про волонтер-хаб, button=доєднатись",
-        reply_markup=back_to_main()
-    )
+# @main_menu_router.callback_query(MainCbData.filter(F.action == MainActions.volunteer_hub))
+# async def volunteer_hub(callback_query: CallbackQuery):
+#     await callback_query.message.edit_text(
+#         text="Про волонтер-хаб, button=доєднатись",
+#         reply_markup=back_to_main()
+#     )
